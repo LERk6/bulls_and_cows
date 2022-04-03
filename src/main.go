@@ -13,11 +13,11 @@ const (
 
 func main() {
 	var (
-		str, winning_number string
+		user_number, winning_number string
 	)
-	input(&str)
 	generating_numbers(&winning_number)
-	fmt.Printf("\nИТОГ:   загаданное число - %v \n\tваше число - %v\n\n", winning_number, str)
+	input(&user_number)
+	fmt.Printf("\nИТОГ:   загаданное число - %v \n\tваше число - %v\n\n", winning_number, user_number)
 }
 
 func generating_numbers(winning_number *string) {
@@ -47,22 +47,21 @@ func generating_numbers(winning_number *string) {
 	}
 }
 
-func input(str *string) {
-	exit := 0
-	for exit != 1 {
+func input(user_number *string) {
+	for exit := 0; exit != 1; {
 		fmt.Printf("\033c")
 		exit = 0
 		fmt.Print("Введите ", Digits_in_number, "-значное число(без повтора цифр): ")
-		for fmt.Scan(str); len(*str) != Digits_in_number; fmt.Scan(str) {
-			incorrect_input(str)
+		for fmt.Scan(user_number); len(*user_number) != Digits_in_number; fmt.Scan(user_number) {
+			incorrect_input(user_number)
 			fmt.Print("Введите ", Digits_in_number, "-значное число(без повтора цифр): ")
 		}
-		if i := fmt.Sprint(strings.ToUpper(*str)); i == "EXIT" {
-			*str = i
+		if i := fmt.Sprint(strings.ToUpper(*user_number)); i == "EXIT" {
+			*user_number = i
 			break
 		}
 		exit = 2
-		for _, v := range *str {
+		for _, v := range *user_number {
 			if v < 48 || v > 57 {
 				exit = -1
 				break
@@ -71,17 +70,17 @@ func input(str *string) {
 	Flag:
 		switch exit {
 		case -1:
-			incorrect_input(str)
+			incorrect_input(user_number)
 		case 2:
-			for i := 1; i < len(*str); i++ {
+			for i := 1; i < len(*user_number); i++ {
 				for j := 0; j < i; j++ {
-					if (*str)[i] == (*str)[j] {
+					if (*user_number)[i] == (*user_number)[j] {
 						exit = 0
 						break
 					}
 				}
 				if exit == 0 {
-					incorrect_input(str)
+					incorrect_input(user_number)
 					break Flag
 				}
 			}
@@ -92,10 +91,10 @@ func input(str *string) {
 	}
 }
 
-func incorrect_input(str *string) {
+func incorrect_input(user_number *string) {
 	// fmt.Printf("\033c")
 	loading()
-	fmt.Println("Некорректный ввод! (" + *str + ")")
+	fmt.Println("Некорректный ввод! (" + *user_number + ")")
 	loading()
 	fmt.Printf("\033c")
 }
